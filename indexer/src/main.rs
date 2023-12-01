@@ -3,7 +3,8 @@ mod logger;
 mod clients;
 mod tasks;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let config = config::Config::from_env();
     let logger: logger::factory::AppLogger = logger::factory::AppLogger::new();
     logger.init_global_default();
@@ -14,7 +15,7 @@ fn main() {
     let indexer =  clients::clique::indexer::init(
         indexer_config, 
         &logger
-    );
+    ).await;
     
     let task_config = config.evm_indexer_config.clone();
     tasks::clique::task::init(

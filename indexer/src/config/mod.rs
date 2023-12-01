@@ -1,6 +1,7 @@
 use dotenv::dotenv;
 use std::env;
 
+// todo belongs to a component?
 #[derive(Clone)]
 pub struct EVMIndexerConfig {
     pub rpc_url: String,

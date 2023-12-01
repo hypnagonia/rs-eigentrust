@@ -4,19 +4,17 @@ use web3::Web3;
 use crate::config::EVMIndexerConfig;
 use crate::logger::factory::AppLogger;
 
-pub fn init(config: EVMIndexerConfig, logger: &AppLogger) {
-
+pub async fn init(config: EVMIndexerConfig, logger: &AppLogger) {
     logger.info("Clique indexer started");
+    indexer(config).await;
 
-    /*
-    async fn indexer() {
-        // Specify your Ethereum node URL
-        let http = Http::new("http://localhost:8545").expect("Failed to create HTTP transport");
+    async fn indexer(config: EVMIndexerConfig) {
+        let http = Http::new(&config.rpc_url).expect("Failed to create HTTP transport");
         let web3 = Web3::new(http);
+        let contract_address = &config.master_registry_contract;
 
-        // Specify the contract address and ABI
-        let contract_address = "0xYourContractAddress";
-        let contract_abi = include_bytes!("path/to/your/contract_abi.json");
+        // todo ../ nesting
+        let contract_abi = include_bytes!("../../../assets/clique_master_registry_abi.json");
 
         // Set up the filter
         let filter = FilterBuilder::default()
@@ -27,11 +25,8 @@ pub fn init(config: EVMIndexerConfig, logger: &AppLogger) {
         // Request logs
         let logs = web3.eth().logs(filter.clone()).await.expect("Failed to get logs");
 
-        // Process the logs
         for log in logs {
             println!("Log: {:?}", log);
         }
     }
-     */
 }
-
