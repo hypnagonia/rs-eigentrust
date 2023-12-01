@@ -1,17 +1,19 @@
 use tracing::{ info, Level };
 use tracing_subscriber::FmtSubscriber;
 use std::sync::Arc;
+use crate::config::LoggerConfig;
 
 pub struct AppLogger {
     subscriber: Arc<FmtSubscriber>,
 }
 
 impl AppLogger {
-    pub fn new() -> Self {
+    pub fn new(logger_config: LoggerConfig) -> Self {
+        // logger settings
         let subscriber = FmtSubscriber::builder()
-        .with_max_level(Level::TRACE)
-        .with_target(true)
-        .finish();
+            .with_max_level(logger_config.logger_level)
+            .with_target(true)
+            .finish();
 
         AppLogger { subscriber: Arc::new(subscriber) }
     }
@@ -21,10 +23,4 @@ impl AppLogger {
             ::set_global_default(self.subscriber.clone())
             .expect("Failed to set the global tracing subscriber");
     }
-
-    pub fn info(&self, message: &str) {
-        // todo wrapper does not work as don't display the original module properly
-        info!("{}", message);
-    }
-    
 }
